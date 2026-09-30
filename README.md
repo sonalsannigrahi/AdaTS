@@ -9,11 +9,12 @@ Speech Language Models (SLM) have demonstrated strong capabilities in end-to-end
 
 Code:
 
-We implement the modelling code as part of transformers, so installation must be done from source and adding the speechlm modelling, preprocessing, and configuration code in transformers/src/transformers/models directory. 
+We implement the modelling code as part of transformers, so installation must be done from source and adding the speechlm modelling, preprocessing, and configuration code in the transformers/src/transformers/models directory. 
 
 Pip install remaining packages from requirements.txt.
 
 For training and evaluation data setup and follow original repositories for download instructions. We provide utils to load these datasets, adding new datasets for training is also straightforward by following the relevant utils script.
 
-To run the training, use the train.py script providing configs from the config directory. 
+To run the training, use the train.py script providing configs from the config directory specifying the training datasets as well as output directories. To run the Modality Alignment (MA) and Instruction Fine-tuning (IFT) phases involves running the training twice, where in the first the LLM decoder is not trainable but the encoder has add_adapter: true. In configs, we also provide accelerate configs. We use zero1.yaml for all trainings.
 
+Contact: [first_name].[last_name]@tecnico.ulisboa.pt
