@@ -1,0 +1,96 @@
+datasets:
+- librispeech
+- peoples_speech
+- mls
+- cv16.1
+- voxpopuli
+- gigaspeech
+- covost2
+- spite
+- spokensquad
+- slue_sqa5
+- librisqa
+selected_langs:
+- en
+- de
+- it
+- fr
+- de
+- nl 
+- ko
+- pt
+- ru
+- zh-CN
+- zh-HK
+- zh-TW
+dataset_workers: 1
+
+audio_encoder: facebook/w2v-bert-2.0
+text_decoder: Qwen/Qwen2.5-1.5B #1.5B
+# Or enable with specific threshold
+token_compression_threshold: 0.85  # values between 0.0 and 1.0
+enable_audio_chunking: false
+# chunk_length_s: 100.0
+# chunk_overlap_s: 1.0
+max_duration: 300
+
+training_args:
+  output_dir: $SCRATCH/speech_lm/models/w2v-qwen25-15_align-iwslt-85-no-chunking
+  do_train: true
+  per_device_train_batch_size: 2
+  gradient_accumulation_steps: 128
+  per_device_eval_batch_size: 2
+  adam_beta1: 0.9
+  adam_beta2: 0.95
+  num_train_epochs: 1
+  lr_scheduler_type: cosine
+  warmup_steps: 2000
+  logging_strategy: steps
+  logging_steps: 25
+  report_to: wandb
+  do_eval: true
+  eval_strategy: steps
+  eval_steps: 1500
+  # eval_on_start: true
+  save_strategy: steps
+  save_total_limit: 5
+  save_steps: 1000
+  dataloader_num_workers: 1
+  remove_unused_columns: false
+  bf16: true
+  group_by_length: true
+  # eval_on_start: true
+  # include_tokens_per_second: true
+
+encoder_lr: 6e-6
+decoder_lr: 2e-5
+adapter_lr: 2e-4
+min_lr_scale: 0.1
+
+val_samples_per_language: 3000
+
+encoder_params:
+  add_adapter: false
+  adapter_kernel_size: 3
+  adapter_stride: 2  # about .5 compression ratio
+  num_adapter_layers: 1
+  # attn_implementation: "flash_attention_2"
+
+decoder_params:
+  attn_implementation: "sdpa"
+  # attn_implementation: "flash_attention_2"
+  # use_sliding_window: true
+  # sliding_window: 32
+
+    # Commented options:
+    # freeze_encoder: true
+    # training_args:
+    #   warmup_ratio: 0.05
+    #   learning_rate: 2e-5
+    #   bf16_full_eval: true
+    #   do_eval: true
+    #   eval_strategy: "steps"
+    #   eval_steps: 1000
+    #   resume_from_checkpoint: true
+    #   eval_on_start: true
+    #   torch_compile: true
